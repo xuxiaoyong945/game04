@@ -1,2 +1,2 @@
-# game04
-biji game
+# hello-world
+Hello world new project template.

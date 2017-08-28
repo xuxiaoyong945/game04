@@ -16,8 +16,47 @@ cc.Class({
 
     // use this for initialization
     onLoad: function () {
+        var self = this;
+        this.nodePref = null;
         console.log("gamescene onLoad");
         this.initData();
+        cc.loader.loadRes("prefabs/card.prefab", function(err, prefab) {
+            self.nodePref = prefab;
+            self.initNode();
+        })
+    },
+
+    initNode: function() {
+        this.addBg();
+
+        this.addUI(this.person_data);
+    },
+
+    addBg: function() {
+        var node = new cc.Node("bg");
+        var sp = node.addComponent(cc.Sprite);
+        sp.spriteFrame = new cc.SpriteFrame(cc.url.raw("resources/bg/bg.png"));
+        this.node.addChild(node, 1)
+    },
+
+    addUI: function(data) {
+        console.log(data);
+        for (var i = 0; i < data.length; i++) {
+            var node = this.addCard(data[i]);
+            node.y = -220;
+            node.x = -400 + i * 100;
+        }
+    },
+
+    addCard: function(data) {
+        if(this.nodePref == null) {
+            console.log("error !!!! add card error");
+            return;
+        }
+        var node = cc.instantiate(this.nodePref);
+        this.node.addChild(node, 10);
+        node.getComponent("cards").init(data);
+        return node;
     },
 
     initData: function() {
@@ -36,6 +75,7 @@ cc.Class({
         }
 
         console.log(sort_cards);
+        this.person_data = sort_cards[0];
     },
 
     randomCard: function(card_type, card_value) {
